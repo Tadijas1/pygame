@@ -34,6 +34,7 @@ star_positions = [(randint(0, WINDOW_WIDTH), randint(0, WINDOW_HEIGHT)) for i in
 while running:
     dt = clock.tick()/1000
     #print(clock.get_fps())
+
     #event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -44,12 +45,19 @@ while running:
         #    player_rect.center = event.pos
 
     #input
-    #print(pygame.mouse.get_pos())
-    #print(pygame.mouse.get_rel())
+    #print(pygame.mouse.get_pos())  print(pygame.mouse.get_rel())
     keys = pygame.key.get_pressed()
-    player_direction.x = int(keys[pygame.K_d])
-    
+    # player input
+    player_direction.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
+    player_direction.y = int(keys[pygame.K_s]) - int(keys[pygame.K_w])
+
+    player_direction = player_direction.normalize() if player_direction else player_direction
     player_rect.center += player_direction*player_speed*dt
+
+    #laser input
+    just_keys = pygame.key.get_just_pressed()
+    if just_keys[pygame.K_SPACE]:
+        print('fire laser')
 
     #draw in game
     display_surface.fill('black')
